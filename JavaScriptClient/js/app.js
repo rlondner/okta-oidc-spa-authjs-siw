@@ -54,6 +54,7 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
                 console.log('id_token: %s', res.idToken);
                 displayClaims(res.claims);
                 localStorage.setItem('id_token', res.idToken);
+                $('#sign-in-form').hide();
               })
               .fail(function(err) {
                 console.log(err);
@@ -69,6 +70,10 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
         var message = err.errorCauses.length > 0 ? err.errorCauses[0].errorSummary : err.message;
         displayError(message);
       });
+    });
+
+    $('#btn-signout').click(function () {
+        $('#sign-in-form').show();
     });
 
     $('#btn-refresh').click(function() {
@@ -91,7 +96,6 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
           localStorage.setItem('id_token', null);
         })
     });
-
 
     $('#btn-api-request').click(function() {
       resetDisplay();
