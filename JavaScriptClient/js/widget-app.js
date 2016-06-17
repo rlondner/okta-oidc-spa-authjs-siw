@@ -49,98 +49,59 @@ define(["jquery", "okta-signin", "okta-auth-sdk", "okta-config"], function ($, O
         }
     });
 
-    // Call this method to render widget at document footer
-    // or after all DOM content has loaded (e.g jQuery ready)
-    oktaSignIn.renderEl(
-      {
-          // Options - in this case, only el is necessary, but can override anything
-          // in the config here as well
-          el: '#widget',
-          authParams: {
-              //scope: [
-              //  'openid',
-              //  'email',
-              //  'profile'
-              //]
-              scope: OktaConfig.scope
-          }
-      },
-      // Success function - called at terminal states like authStatus SUCCESS or
-      // when the recovery emails are sent (forgot password and unlock)
-      function (res) {
-          if (res.status === 'SUCCESS') {
-              console.log('User %s successfully authenticated %o', res.claims.email, res);
-              showAuthUI(true);
-              $('#claims').append('<pre><code class="json">' +
-                JSON.stringify(res.claims, null, '  ') + '</code></pre>');
-              $('pre code').each(function (i, block) {
-                  hljs.highlightBlock(block);
-              });
-
-          }
-
-          else if (res.status === 'FORGOT_PASSWORD_EMAIL_SENT') {
-              // res.username - value user entered in the forgot password form
-              console.log('User %s sent recovery code via email to reset password', res.username);
-          }
-
-          else if (res.status === 'UNLOCK_ACCOUNT_EMAIL_SENT') {
-              // res.username - value user entered in the unlock account form
-              console.log('User %s sent recovery code via email to unlock account', res.username);
-          }
-      },
-
-      // Error function - called when the widget experiences an unrecoverable error
-      function (err) {
-          // err is an Error object (ConfigError, UnsupportedBrowserError, etc)
-          console.log('Unexpected error authenticating user: %o', err);
-          //showAuthUI(false);
-      }
-    );
-
-
-    var idTokenKey = 'idToken';
     var sessionTokenKey = 'sessionToken';
-    var userLoginKey = 'userLogin';
-
 
     var renderOktaWidget = function () {
         oktaSessionsMe(function (authenticated) {
-            console.log('Is user authenticated? ' + authenticated);
             showAuthUI(authenticated);
             if (!authenticated) {
                 oktaSignIn.renderEl(
-                    { el: '#widget' },
-                    function (res) {
-                        if (res.status === 'SUCCESS') {
-                            console.log(res);
-                            var id_token = res.id_token || res.idToken;
-                            console.log('id token: ' + id_token);
-                            sessionStorage.setItem(idTokenKey, id_token);
-                            sessionStorage.setItem(userLoginKey, res.claims.preferred_username);
-                            showAuthUI(true);
+                    {
+                        el: '#widget',
+                        authParams: {
+                            scope: OktaConfig.scope
                         }
                     },
-                    function (err) { console.log('Unexpected error authenticating user: %o', err); }
+                          // Success function - called at terminal states like authStatus SUCCESS or
+                      // when the recovery emails are sent (forgot password and unlock)
+                      function (res) {
+                          if (res.status === 'SUCCESS') {
+                              console.log('User %s successfully authenticated %o', res.claims.email, res);
+                              showAuthUI(true);
+                              $('#claims').append('<pre><code class="json">' +
+                                JSON.stringify(res.claims, null, '  ') + '</code></pre>');
+                              $('pre code').each(function (i, block) {
+                                  hljs.highlightBlock(block);
+                              });
+
+                          }
+
+                          else if (res.status === 'FORGOT_PASSWORD_EMAIL_SENT') {
+                              // res.username - value user entered in the forgot password form
+                              console.log('User %s sent recovery code via email to reset password', res.username);
+                          }
+
+                          else if (res.status === 'UNLOCK_ACCOUNT_EMAIL_SENT') {
+                              // res.username - value user entered in the unlock account form
+                              console.log('User %s sent recovery code via email to unlock account', res.username);
+                          }
+                      },
+                function (err) { console.log('Unexpected error authenticating user: %o', err); }
                 );
             }
             else {
-                var userLogin = sessionStorage.getItem(userLoginKey);
-                if (userLogin) {
-                    console.log('user Login is ' + userLogin);
-                }
             }
         });
     };
 
     var showAuthUI = function (isAuthenticated) {
         if (isAuthenticated) {
-            console.log("hiding widget");
+            console.log("authenticated user - hiding widget");
             $("#apicall-buttons").show();
             $('#widget').hide();
         }
         else {
-            console.log("showing widget");
+            console.log("anonymous user - showing widget");
             $("#apicall-buttons").hide();
             $('#widget').show();
         }
@@ -162,16 +123,13 @@ define(["jquery", "okta-signin", "okta-auth-sdk", "okta-config"], function ($, O
                 withCredentials: true
             },
             success: function (data) {
-                console.log('setting success to true');
                 console.log("My session: ");
                 console.log(data);
                 sessionStorage.setItem(sessionTokenKey, JSON.stringify(data));
                 return callBack(true);
-                //$('#logged-in-res').text(data);
             },
             error: function (textStatus, errorThrown) {
-                console.log('setting success to false');
-                //$('#logged-in-res').text("You must be logged in to call this API");
+                console.log('No session is present');
                 return callBack(false);
             },
             async: true
@@ -188,17 +146,7 @@ define(["jquery", "okta-signin", "okta-auth-sdk", "okta-config"], function ($, O
             },
             success: function (data) {
                 console.log('success deleting session');
-                console.log(data);
-                console.log('removing session from sessionStorage');
                 sessionStorage.removeItem(sessionTokenKey);
-                console.log('removed session from sessionStorage');
-                console.log('removing user Login from sessionStorage');
-                sessionStorage.removeItem(userLoginKey);
-                console.log('removed user Login from sessionStorage');
-                console.log('removing id Token from sessionStorage');
-                sessionStorage.removeItem(idTokenKey);
-                console.log('removed id Token from sessionStorage');
-                $('#logged-in-res').text('');
                 return callback(true);
             },
             error: function (textStatus, errorThrown) {
@@ -218,13 +166,14 @@ define(["jquery", "okta-signin", "okta-auth-sdk", "okta-config"], function ($, O
                 var sessionTokenString = sessionStorage.getItem(sessionTokenKey);
                 if (sessionTokenString) {
                     sessionToken = JSON.parse(sessionTokenString);
-                    console.log(sessionToken);
                     var sessionId = sessionToken.id;
                     console.log('closing session ' + sessionId);
                     closeSession(function (success) {
                         console.log('Is session closed? ' + success);
-                        if (success)
-                            renderOktaWidget();
+                        if (success) {
+                            showAuthUI(false);
+                            $('#claims').hide();
+                        }
                     })
                 }
             }
@@ -242,10 +191,10 @@ define(["jquery", "okta-signin", "okta-auth-sdk", "okta-config"], function ($, O
                 hljs.highlightBlock(block);
             });
             return res;
+        }, {
+            scope: OktaConfig.scope
         });
     });
 
     renderOktaWidget();
-
-
 });
