@@ -67,6 +67,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="css\widget-main.css" />
+    <Content Include="favicon.ico" />
     <Content Include="js\widget-app.js" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

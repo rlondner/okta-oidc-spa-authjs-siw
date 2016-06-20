@@ -25,6 +25,10 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
     $('#api-resources').empty();
   };
 
+  var renderUI = function () {
+      console.log("rendering UI");
+  };
+
   var displayClaims = function(claims) {
     $('#claims').append('<pre><code class="json">' +
       JSON.stringify(claims, null, '  ') + '</code></pre>');
@@ -38,7 +42,10 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function($, OktaAuth, OktaCon
     $('div.login-box').append('<div class="error"><p>'+ msg + '</p></div>');
   }
 
-  $(document).ready(function() {
+  $(document).ready(function () {
+
+      renderUI();
+
     $('#btn-sign-in').click(function() {
       resetDisplay();
       client.signIn({
