@@ -2,14 +2,12 @@
     "baseUrl": "js",
     "paths": {
         "jquery": "//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min",
-        //"okta-auth-sdk": "//ok1static.oktacdn.com/assets/js/sdk/okta-auth-js/1.0.2/okta-auth-js-1.0.2.min",
-        "okta-auth-sdk": "OktaAuth.min",
         "okta-config": "config",
         "okta-signin": "//oidcdemos.oktapreview.com/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min"
     }
 });
 
-define(["jquery", "okta-signin", "okta-auth-sdk", "okta-config"], function ($, OktaSignIn, OktaAuth, OktaConfig) {
+define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaConfig) {
 
     // Set initial config options for widget
     var oktaSignIn = new OktaSignIn({
