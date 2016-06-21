@@ -3,7 +3,7 @@
     "paths": {
         "jquery": "//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min",
         "okta-config": "config",
-        "okta-signin": "//oidcdemos.oktapreview.com/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min"
+        "okta-signin": "//ok1static.oktacdn.com/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min"
     }
 });
 
