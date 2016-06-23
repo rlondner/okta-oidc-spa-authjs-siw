@@ -14,6 +14,9 @@ define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaCo
         baseUrl: OktaConfig.orgUrl,
         clientId: OktaConfig.clientId,
         logo: '/images/acme_logo.png',
+        redirectUri: OktaConfig.redirectUri,
+
+
 
         features: {
             securityImage: false,
@@ -169,8 +172,10 @@ define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaCo
                     closeSession(function (success) {
                         console.log('Is session closed? ' + success);
                         if (success) {
-                            showAuthUI(false);
-                            $('#claims').hide();
+                            //showAuthUI(false);
+                            location.reload(false);
+                            //$('#claims').hide();
+                            
                         }
                     })
                 }

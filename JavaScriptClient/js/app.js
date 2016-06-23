@@ -16,137 +16,147 @@ define(["jquery", "okta-auth-sdk", "okta-config"], function ($, OktaAuth, OktaCo
     var client = new OktaAuth({
         url: OktaConfig.orgUrl,
         clientId: OktaConfig.clientId,
-        redirectUri: window.location.href
+        redirectUri: OktaConfig.redirectUri
     });
 
     var resetDisplay = function () {
+        //console.log("resetDisplay");
         $('div.error').remove();
         $('#claims').empty();
         $('#api-resources').empty();
     };
 
     var showSignIn = function () {
-        console.log('showing');
+        //console.log('showing sign-in form');
         $('#sign-in-form').show();
         $('#authenticated-buttons').hide();
 
     };
 
     var hideSignIn = function () {
-        console.log('hiding');
+        //console.log('hiding sign-in form');
         $('#sign-in-form').hide();
         $('#authenticated-buttons').show();
     };
 
     var renderUI = function () {
-        console.log("rendering UI");
-        client.session.exists().done(function(result) {
-            if(result == true) hideSignIn();
-            else showSignIn();
-            });
-        };
-
-        var displayClaims = function (claims) {
-            $('#claims').append('<pre><code class="json">' +
-              JSON.stringify(claims, null, '  ') + '</code></pre>');
-            $('pre code').each(function (i, block) {
-                hljs.highlightBlock(block);
-            });
-        };
-
-        var displayError = function (msg) {
-            $('div.error').remove();
-            $('div.login-box').append('<div class="error"><p>' + msg + '</p></div>');
-        }
-
-        $(document).ready(function () {
-
-            renderUI();
-
-            $('#btn-sign-in').click(function () {
+        //console.log("rendering UI");
+        client.session.exists().done(function (result) {
+            if (result == true) {
+                hideSignIn();
+            }
+            else {
+                showSignIn();
                 resetDisplay();
-                client.signIn({
-                    username: $('#username').val(),
-                    password: $('#password').val()
-                }).then(function (tx) {
-                    switch (tx.status) {
-                        case 'SUCCESS':
-                            client.idToken.authorize({
-                                scope: OktaConfig.scope,
-                                sessionToken: tx.sessionToken
-                            })
-                              .then(function (res) {
-                                  console.log('id_token: %s', res.idToken);
-                                  displayClaims(res.claims);
-                                  localStorage.setItem('id_token', res.idToken);
-                                  renderUI();
-                              })
-                              .fail(function (err) {
-                                  console.log(err);
-                                  displayError(err.message);
-                              })
-                            break;
-                        default:
-                            throw 'We cannot handle the ' + tx.status + ' status';
-                    }
+            }
+        });
+    };
 
-                }).fail(function (err) {
-                    console.log(err);
-                    var message = err.errorCauses.length > 0 ? err.errorCauses[0].errorSummary : err.message;
-                    displayError(message);
-                });
-            });
+    var displayClaims = function (claims) {
+        $('#claims').append('<pre><code class="json">' +
+          JSON.stringify(claims, null, '  ') + '</code></pre>');
+        $('pre code').each(function (i, block) {
+            hljs.highlightBlock(block);
+        });
+    };
 
-            $('#btn-signout').click(function () {
-                client.session.exists().done(function(result) {
-                    if (result == true) client.session.close();
-                    renderUI();
-                });
-            });
+    var displayError = function (msg) {
+        $('div.error').remove();
+        $('div.login-box').append('<div class="error"><p>' + msg + '</p></div>');
+    }
 
-            $('#btn-refresh').click(function () {
-                resetDisplay();
-                var idToken = localStorage.getItem('id_token');
-                if (!idToken) {
-                    return displayError('You must first sign-in before you can refresh a token!');
+    $(document).ready(function () {
+
+        renderUI();
+
+        $('#btn-sign-in').click(function () {
+            resetDisplay();
+            client.signIn({
+                username: $('#username').val(),
+                password: $('#password').val()
+            }).then(function (tx) {
+                switch (tx.status) {
+                    case 'SUCCESS':
+                        client.idToken.authorize({
+                            scope: OktaConfig.scope,
+                            sessionToken: tx.sessionToken
+                        })
+                          .then(function (res) {
+                              console.log('id_token: %s', res.idToken);
+                              displayClaims(res.claims);
+                              localStorage.setItem('id_token', res.idToken);
+                              renderUI();
+                          })
+                          .fail(function (err) {
+                              console.log(err);
+                              displayError(err.message);
+                          })
+                        break;
+                    default:
+                        throw 'We cannot handle the ' + tx.status + ' status';
                 }
-                client.idToken.refresh({
-                    scope: OktaConfig.scope
-                })
-                  .then(function (res) {
-                      console.log('id_token: %s', idToken);
-                      displayClaims(res.claims);
-                      localStorage.setItem('id_token', res.idToken);
-                  })
-                  .fail(function (err) {
-                      console.log(err);
-                      displayError(err.message);
-                      localStorage.setItem('id_token', null);
-                  })
-            });
 
-            $('#btn-api-request').click(function () {
-                resetDisplay();
-                var idToken = localStorage.getItem('id_token');
-                if (!idToken) {
-                    return displayError('You must first sign-in before you can refresh a token!');
+            }).fail(function (err) {
+                console.log(err);
+                var message = err.errorCauses.length > 0 ? err.errorCauses[0].errorSummary : err.message;
+                displayError(message);
+            });
+        });
+
+        $('#btn-signout').click(function () {
+            client.session.exists().done(function (result) {
+                if (result == true) {
+                    client.session.close().done(function (result) {
+                        console.log(result);
+                        renderUI();
+                    })
                 }
-                $.ajax({
-                    url: '/protected',
-                    headers: {
-                        Authorization: 'Bearer ' + idToken
-                    },
-                    processData: false,
-                }).done(function (b64data) {
-                    $('#api-resources').append('<img src="data:image/png;base64,' + b64data + '">');
-                }).fail(function (jqXHR, textStatus) {
-                    var msg = 'Unable to fetch protected resource';
-                    msg += '<br>' + jqXHR.status + ' ' + jqXHR.responseText;
-                    if (jqXHR.status === 401) {
-                        msg += '<br>Your token may be expired'
-                    }
-                    displayError(msg);
-                });
+            });
+        });
+
+        $('#btn-refresh').click(function () {
+            resetDisplay();
+            var idToken = localStorage.getItem('id_token');
+            if (!idToken) {
+                return displayError('You must first sign-in before you can refresh a token!');
+            }
+            client.idToken.refresh({
+                scope: OktaConfig.scope
+            })
+              .then(function (res) {
+                  console.log('id_token: %s', idToken);
+                  displayClaims(res.claims);
+                  localStorage.setItem('id_token', res.idToken);
+              })
+              .fail(function (err) {
+                  console.log(err);
+                  displayError(err.message);
+                  localStorage.setItem('id_token', null);
+              })
+        });
+
+        $('#btn-api-request').click(function () {
+            resetDisplay();
+            var idToken = localStorage.getItem('id_token');
+            if (!idToken) {
+                return displayError('You must first sign-in before you can refresh a token!');
+            }
+            $.ajax({
+                url: '/protected',
+                headers: {
+                    Authorization: 'Bearer ' + idToken
+                },
+                processData: false,
+            }).done(function (b64data) {
+                $('#api-resources').append('<img src="data:image/png;base64,' + b64data + '">');
+            }).fail(function (jqXHR, textStatus) {
+                var msg = 'Unable to fetch protected resource';
+                msg += '<br>' + jqXHR.status + ' ' + jqXHR.responseText;
+                if (jqXHR.status === 401) {
+                    msg += '<br>Your token may be expired'
+                }
+                displayError(msg);
             });
         });
     });
+});
