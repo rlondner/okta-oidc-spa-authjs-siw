@@ -69,6 +69,7 @@
     <Content Include="css\widget-main.css" />
     <Content Include="favicon.ico" />
     <Content Include="js\widget-app.js" />
+    <None Include="server.bat" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -88,6 +89,7 @@
     <Content Include="js\OktaAuth.min.js" />
     <Content Include="js\require.js" />
     <Content Include="Readme.txt" />
+    <None Include="server.py" />
     <Content Include="Web.config" />
     <Content Include="widget.html" />
   </ItemGroup>
