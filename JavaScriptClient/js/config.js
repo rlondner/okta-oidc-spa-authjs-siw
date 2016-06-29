@@ -11,7 +11,7 @@
     return {
       orgUrl: 'https://oidcdemos.oktapreview.com',
       clientId: 'guHLNDnxiATk0zYXUcHZ',
-      scope: ['openid', 'email', 'profile', 'phone', 'groups'],
+      scope: ['openid', 'email', 'profile', 'phone', 'address', 'groups'],
       redirectUri: 'http://localhost:8080'
     };
 
