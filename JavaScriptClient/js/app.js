@@ -2,9 +2,7 @@ requirejs.config({
     "baseUrl": "js",
     "paths": {
         "jquery": "//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min",
-        //"okta-auth-sdk": "//ok1static.oktacdn.com/assets/js/sdk/okta-auth-sdk-1.0.0.min",
-        "okta-auth-sdk": "//oidcdemos.oktapreview.com/assets/js/sdk/okta-auth-js/1.0.2/okta-auth-js-1.0.2.min",
-        //"okta-auth-sdk": "OktaAuth.min",
+        "okta-auth-sdk": "//ok1static.oktacdn.com/assets/js/sdk/okta-auth-js/1.0.2/okta-auth-js-1.0.2.min",
         "okta-config": "config"
     }
 });
