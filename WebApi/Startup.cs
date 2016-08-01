@@ -7,9 +7,9 @@ using System.IdentityModel.Tokens;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.Jwt;
 
-[assembly: OwinStartup(typeof(Okta.Samples.OpenIDConnect.AspNet.Api.Startup))]
+[assembly: OwinStartup(typeof(Okta.Samples.OAuth.AspNet.Api.Startup))]
 
-namespace Okta.Samples.OpenIDConnect.AspNet.Api
+namespace Okta.Samples.OAuth.AspNet.Api
 {
     public class Startup
     {

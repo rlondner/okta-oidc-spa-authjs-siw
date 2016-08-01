@@ -8,15 +8,11 @@ using System.Security.Claims;
 using System.Threading;
 using System.Web.Http.Controllers;
 
-namespace Okta.Samples.OpenIDConnect.AspNet.Api.Controllers
+namespace Okta.Samples.OAuth.AspNet.Api.Controllers
 {
     public class OktaGroupAuthorizeAttribute : System.Web.Http.AuthorizeAttribute
     {
-        public bool ByPassAuthorization { get; set; }
-        public string Groups { get; set; }
-
         public GroupPolicy Policy { get; set; }
-
 
         protected override bool IsAuthorized(HttpActionContext actionContext)
         {
@@ -25,9 +21,10 @@ namespace Okta.Samples.OpenIDConnect.AspNet.Api.Controllers
             {
                 if (Thread.CurrentPrincipal != null)
                 {
-                    if (!string.IsNullOrEmpty(Groups))
+                    string strGroups = System.Web.Configuration.WebConfigurationManager.AppSettings["okta:RequiredGroupMemberships"];
+                    if (!string.IsNullOrEmpty(strGroups))
                     {
-                        List<string> lstGroupNames = Groups.Split(',').ToList<string>();
+                        List<string> lstGroupNames = strGroups.Split(',').ToList<string>();
                         ClaimsPrincipal principal = Thread.CurrentPrincipal as ClaimsPrincipal;// HttpContext.Current.User as ClaimsPrincipal;
                         IEnumerable<Claim> groupsClaimEnum = principal.Claims.Where(c => c.Type == "groups");
                         List<Claim> groupsClaim = null;
@@ -111,12 +108,25 @@ namespace Okta.Samples.OpenIDConnect.AspNet.Api.Controllers
             }
             else
             {
-                actionContext.Response = new AuthenticationFailureMessage("unauthorized", actionContext.Request,
-                    new
-                    {
-                        error = "invalid_request",
-                        error_message = "The Token is invalid"
-                    });
+                if (owinContext.Authentication.User != null)
+                {
+                    actionContext.Response = new AuthenticationFailureMessage("unauthorized", actionContext.Request,
+                        new
+                        {
+                            error = "validation_error",
+                            error_message = string.Format("The user could be found in the JWT claims (userid: {0}) but the JWT itself is invalid, most likely because it doesn't contain the proper groups claim value.", owinContext.Authentication.User.Claims.ElementAt(4))
+                        });
+                }
+
+                else
+                {
+                    actionContext.Response = new AuthenticationFailureMessage("unauthorized", actionContext.Request,
+                        new
+                        {
+                            error = "invalid_user",
+                            error_message = "The user could not be found, so most likely the user claims could not be extracted from the token you sent"
+                        });
+                }
             }
         }
 

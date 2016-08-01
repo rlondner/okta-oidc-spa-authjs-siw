@@ -9,7 +9,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
 
-namespace Okta.Samples.OpenIDConnect.AspNet.Api.Controllers
+namespace Okta.Samples.OAuth.AspNet.Api.Controllers
 {
     [EnableCors(origins: "*", headers: "*", methods: "*")]
     public class ValuesController : ApiController
@@ -22,10 +22,9 @@ namespace Okta.Samples.OpenIDConnect.AspNet.Api.Controllers
         }
 
 
-        [OktaGroupAuthorize(Groups = "Marketing,Finance", Policy = GroupPolicy.Any)]
+        [OktaGroupAuthorize(Policy = GroupPolicy.Any)]
         [HttpGet]
         [Route("protected")]
-
         public IHttpActionResult Secured()
         {
             string login = string.Empty;

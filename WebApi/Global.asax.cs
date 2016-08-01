@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Routing;
 
-namespace Okta.Samples.OpenIDConnect.AspNet.Api
+namespace Okta.Samples.OAuth.AspNet.Api
 {
     public class WebApiApplication : System.Web.HttpApplication
     {

@@ -10,7 +10,7 @@ using System.Web.Configuration;
 using System.Web.Http;
 using System.IdentityModel.Tokens;
 
-namespace Okta.Samples.OpenIDConnect.AspNet.Api
+namespace Okta.Samples.OAuth.AspNet.Api
 {
     public static class WebApiConfig
     {
@@ -21,8 +21,8 @@ namespace Okta.Samples.OpenIDConnect.AspNet.Api
             config.EnableCors(new System.Web.Http.Cors.EnableCorsAttribute("*", "*", "*"));
             // Configure Web API to use only bearer token authentication.
             // Must reference OWIN libraries for the following 2 lines to work
-            //config.SuppressDefaultHostAuthentication();
-            //config.Filters.Add(new HostAuthenticationFilter(OAuthDefaults.AuthenticationType));
+            config.SuppressDefaultHostAuthentication();
+            config.Filters.Add(new HostAuthenticationFilter(Microsoft.Owin.Security.OAuth.OAuthDefaults.AuthenticationType));
 
             // Web API routes
             config.MapHttpAttributeRoutes();

@@ -10,7 +10,7 @@ using System.IdentityModel.Tokens;
 using Microsoft.IdentityModel.Protocols;
 using System.Threading;
 
-namespace Okta.Samples.OpenIDConnect.AspNet.Api
+namespace Okta.Samples.OAuth.AspNet.Api
 {
     // This class is necessary because the OAuthBearer Middleware does not leverage
     // the OpenID Connect metadata endpoint exposed by the STS by default.

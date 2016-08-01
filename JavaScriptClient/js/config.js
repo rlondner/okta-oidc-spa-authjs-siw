@@ -14,7 +14,7 @@
       scope: ['openid', 'email', 'phone', 'address', 'groups', 'profile', 'groups', 'call-api'],
       redirectUri: 'http://localhost:8081',
       webApiUrl: 'https://localhost:44301',
-      callApiWithAT : true
+      callApiWithAT : false
 };
 
 }));
