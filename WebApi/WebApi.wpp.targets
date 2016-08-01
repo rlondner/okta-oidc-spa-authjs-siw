@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <!-- Make sure web.config will be there even for package/publish -->
+  <Target Name="CopyWebTemplateConfig" BeforeTargets="Build">
+    <Copy SourceFiles="web.template.config"
+          DestinationFiles="web.config"/>
+    <TransformXml Source="web.template.config"
+          Transform="web.dev.$(Configuration).config"
+          Destination="web.config" />
+  </Target>
+
+  <!--<PropertyGroup>
+    <PrepareForRunDependsOn>
+      $(PrepareForRunDependsOn);
+      UpdateWebConfigBeforeRun;
+    </PrepareForRunDependsOn>
+  </PropertyGroup>-->
+
+  <!-- This target will run right before you run your app in Visual Studio - TODO: make it work!s -->
+  <Target Name="UpdateWebConfigBeforeRun">
+    <Message Text="Configuration: $(Configuration): web.dev.$(Configuration).config"/>
+    <!--<TransformXml Source="web.template.config"
+              Transform="web.dev.$(Configuration).config"
+              Destination="web.config" />-->
+  </Target>
+
+  <!-- Exclude the config template files from the created package -->
+  <Target Name="ExcludeCustomConfigTransformFiles" BeforeTargets="ExcludeFilesFromPackage">
+    <ItemGroup>
+      <ExcludeFromPackageFiles Include="web.template.config;web.dev.*.config"/>
+    </ItemGroup>
+    <Message Text="ExcludeFromPackageFiles: @(ExcludeFromPackageFiles)" Importance="high"/>
+  </Target>
+</Project>

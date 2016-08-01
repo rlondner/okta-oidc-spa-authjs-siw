@@ -3,7 +3,7 @@
     "paths": {
         "jquery": "//ajax.googleapis.com/ajax/libs/jquery/3.0.0/jquery.min",
         "okta-config": "config",
-        "okta-signin": "//ok1static.oktacdn.com/js/sdk/okta-signin-widget/1.3.3/js/okta-sign-in-1.3.3.min"
+        "okta-signin": "//ok1static.oktacdn.com/assets/js/sdk/okta-signin-widget/1.4.0/js/okta-sign-in.min"
     }
 });
 
@@ -13,11 +13,8 @@ define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaCo
     var oktaSignIn = new OktaSignIn({
         baseUrl: OktaConfig.orgUrl,
         clientId: OktaConfig.clientId,
-        logo: '/images/acme_logo.png',
+        logo: 'images/acme_logo.png',
         redirectUri: OktaConfig.redirectUri,
-
-
-
         features: {
             securityImage: false,
             rememberMe: true,
@@ -25,7 +22,6 @@ define(["jquery", "okta-signin", "okta-config"], function ($, OktaSignIn, OktaCo
             selfServiceUnlock: true,
             multiOptionalFactorEnroll: true
         },
-
         helpLinks: {
             help: 'http://example.com/custom/help/page',
 

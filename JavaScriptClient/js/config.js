@@ -9,10 +9,12 @@
 }(this, function () {
 
     return {
-      orgUrl: 'https://oidcdemos.oktapreview.com',
-      clientId: 'guHLNDnxiATk0zYXUcHZ',
-      scope: ['openid', 'email', 'profile', 'phone', 'address', 'groups'],
-      redirectUri: 'http://localhost:8080'
-    };
+      orgUrl: 'https://example.oktapreview.com',
+      clientId: 'ViczvMucBWT14qg3lAM1',
+      scope: ['openid', 'email', 'phone', 'address', 'groups', 'profile', 'groups', 'call-api'],
+      redirectUri: 'http://localhost:8081',
+      webApiUrl: 'https://localhost:44301',
+      callApiWithAT : true
+};
 
 }));

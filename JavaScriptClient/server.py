@@ -13,7 +13,7 @@ elif len(sys.argv) > 1:
     PORT = int(sys.argv[1])
     I = ""
 else:
-    PORT = 8080
+    PORT = 8081
     I = ""
 
 
