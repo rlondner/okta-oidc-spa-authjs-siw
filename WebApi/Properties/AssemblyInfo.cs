@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
@@ -9,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Okta, Inc")]
-[assembly: AssemblyProduct("OpenID Connect Web Api")]
+[assembly: AssemblyProduct("OAuth Resource Server Sample")]
 [assembly: AssemblyCopyright("Copyright ©  2016 Okta")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

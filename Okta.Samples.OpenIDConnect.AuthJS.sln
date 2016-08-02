@@ -7,6 +7,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JavaScriptClient", "JavaScr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{4E62125A-B5CF-4C50-BEA7-901B8862533A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Licenses", "Licenses", "{B2112DD1-7B6E-435E-816B-0365A0DB7030}"
+	ProjectSection(SolutionItems) = preProject
+		LICENSE = LICENSE
+		THIRD_PARTY_NOTICES = THIRD_PARTY_NOTICES
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
