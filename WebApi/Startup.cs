@@ -1,11 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.Owin;
+﻿using Microsoft.Owin;
 using Owin;
 using System.Web.Configuration;
-using System.IdentityModel.Tokens;
 using Microsoft.Owin.Security.OAuth;
 using Microsoft.Owin.Security.Jwt;
+using System.IdentityModel.Tokens;
 
 [assembly: OwinStartup(typeof(Okta.Samples.OAuth.AspNet.Api.Startup))]
 
@@ -40,7 +38,7 @@ namespace Okta.Samples.OAuth.AspNet.Api
                 //the OIDC_Issuer value is the Okta org url so we use it to retrieve the metadata
                 AccessTokenFormat = new JwtFormat(tvps,
                 new OpenIdConnectCachingSecurityTokenProvider(oidcIssuer + "/.well-known/openid-configuration"))
-            });
+        });
         }
     }
 }

@@ -11,7 +11,7 @@ using System.Web.Http.Cors;
 
 namespace Okta.Samples.OAuth.AspNet.Api.Controllers
 {
-    [EnableCors(origins: "*", headers: "*", methods: "*")]
+    [EnableCors(origins: "*", headers: "Accept, Authorization", methods: "GET, OPTIONS")]
     public class ValuesController : ApiController
     {
         [HttpGet]
@@ -22,7 +22,7 @@ namespace Okta.Samples.OAuth.AspNet.Api.Controllers
         }
 
 
-        [OktaGroupAuthorize(Policy = GroupPolicy.Any)]
+        //[OktaGroupAuthorize(Policy = GroupPolicy.Any)]
         [HttpGet]
         [Route("protected")]
         public IHttpActionResult Secured()

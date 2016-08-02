@@ -16,9 +16,12 @@ namespace Okta.Samples.OAuth.AspNet.Api
     {
         public static void Register(HttpConfiguration config)
         {
-            // Web API configuration and services
-            //config.EnableCors();
-            config.EnableCors(new System.Web.Http.Cors.EnableCorsAttribute("*", "*", "*"));
+            // Enable CORS
+            config.EnableCors(); // if you only include this line, then you MUST include an EnableCors attribute in your controller (see ValuesController)
+            //Otherwise, you can configure CORS globally, as is done in the next 2 following lines
+            //var enableCorsAttribute = new System.Web.Http.Cors.EnableCorsAttribute("*", "Accept, Authorization", "GET, OPTIONS");
+            //config.EnableCors(enableCorsAttribute);
+
             // Configure Web API to use only bearer token authentication.
             // Must reference OWIN libraries for the following 2 lines to work
             config.SuppressDefaultHostAuthentication();
